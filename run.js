@@ -81,20 +81,14 @@ function main() {
     }
 
     const isArtableAttachment = (object, type) => {
+
+        const checkProperties = properties => _.indexOf(_.map(properties, property => _.has(object, property)), false) === -1
+
         switch (type) {
             case "file":
-                return object.id
-                    && object.url
-                    && object.filename
-                    && object.size
-                    && object.type
-                    && true
-
+                return checkProperties(["id", "url", "filename", "size", "type"])
             case "thumbnail":
-                return object.url
-                    && object.width
-                    && object.height
-                    && true
+                return checkProperties(["url", "width", "height"])
             default:
                 return false
         }
