@@ -1,2 +1,3 @@
 node_modules/
-API_KEYS.json
+settings.json
+.editorconfig

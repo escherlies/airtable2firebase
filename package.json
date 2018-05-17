@@ -2,6 +2,10 @@
   "name": "airtable2firebase",
   "version": "1.0.0",
   "description": "",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/enryco/airtable2firebase"
+  },
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -17,5 +21,11 @@
     "babel-preset-es2015-node": "^6.1.1",
     "babel-preset-stage-2": "^6.24.1",
     "babel-watch": "^2.0.7"
+  },
+  "dependencies": {
+    "airtable": "^0.5.4",
+    "fast-crc32c": "^1.0.4",
+    "firebase-admin": "^5.12.1",
+    "lodash": "^4.17.10"
   }
 }
