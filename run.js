@@ -29,22 +29,6 @@ console.log('\n\n\n*** Airtable to Firebase Service *** \n\n\n')
 
 function main() {
 
-    const parseData = array => {
-        const clone = _.cloneDeep(array)
-
-        const recursivlyLookForAttatchments = object => {
-            if (object.filename && object.size) {
-                // upload to firebase
-                console.log('Simulated Upload...')
-                const url = object.url
-                const p = uploadToFirebaseCloudStorage(url)
-                console.log(p)
-
-            }
-        }
-
-
-    }
 
     const uploadToFirebaseCloudStorage = (url, destination = '') => {
 
@@ -55,14 +39,15 @@ function main() {
             }
 
             const filename = url.substring(url.lastIndexOf('/') + 1)
-            const file = bucket.file(destination + filename)
+            const path = destination + filename
+            const file = bucket.file(path)
 
             let logMessage = ''
 
             file.exists(function (err, exists) {
                 if (err) return errorHandler(err)
 
-                if (!exists || true) {
+                if (!exists || true) { // TODO-PROD: Remove True
                     const currentRequest = request
                         .get(url)
                         .on('response', function (response) {
@@ -78,7 +63,7 @@ function main() {
 
                                         // The file upload is complete.
                                         console.log(logMessage + 'Finished uploading', filename, 'to /' + destination)
-                                        resolve()
+                                        resolve(path)
                                     })
                             } else {
                                 errorHandler('Response error code ' + response.statusCode)
@@ -95,10 +80,65 @@ function main() {
         })
     }
 
+    const validateAirtable = (object, type) => {
+        switch (type) {
+            case "file":
+                return object.id
+                    && object.url
+                    && object.filename
+                    && object.size
+                    && object.type
+                    && true
 
-    uploadToFirebaseCloudStorage('https://dl.airtable.com/CMsluIDTXCtwIXXD8wro_1.jpg')
-        .then(value => console.log(value))
-        .catch(err => console.error(err))
+            case "thumbnail":
+                return object.url
+                    && object.width
+                    && object.height
+                    && true
+            default:
+                return false
+        }
+    }
+
+
+    const swapUrls = (array, destination) => {
+
+        const clone = _.cloneDeep(array)
+
+        const recursivlyLookForAttatchments = (value, route = []) => {
+
+            if (typeof value === 'object') {
+
+                // check if it's an airtable file object
+                if (validateAirtable(value, 'file') || validateAirtable(value, 'thumbnail')) {
+
+                    // upload to firebase
+                    const url = value.url
+                    uploadToFirebaseCloudStorage(url, destination)
+                        .then(path => {
+                            _.set(clone, [...route, 'firebasePath'], path)
+                        })
+                        .catch(err => console.error(err))
+                }
+
+                // iterate again over every key
+                _.forEach(value, (nextValue, key, collection) => {
+                    recursivlyLookForAttatchments(nextValue, [...route, key])
+                })
+
+            }
+        }
+
+        recursivlyLookForAttatchments(clone)
+
+        setTimeout(() => console.log(clone), 5000
+        )
+    }
+
+
+    // uploadToFirebaseCloudStorage('https://dl.airtable.com/CMsluIDTXCtwIXXD8wro_1.jpg')
+    //     .then(path => console.log(path))
+    //     .catch(err => console.error(err))
 }
 
 main()
