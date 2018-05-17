@@ -1,0 +1,1 @@
+console.log('Airtable to Firebase Service')
