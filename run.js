@@ -80,7 +80,7 @@ function main() {
         })
     }
 
-    const validateAirtable = (object, type) => {
+    const isArtableAttachment = (object, type) => {
         switch (type) {
             case "file":
                 return object.id
@@ -110,7 +110,7 @@ function main() {
             if (typeof value === 'object') {
 
                 // check if it's an airtable file object
-                if (validateAirtable(value, 'file') || validateAirtable(value, 'thumbnail')) {
+                if (isArtableAttachment(value, 'file') || isArtableAttachment(value, 'thumbnail')) {
 
                     // upload to firebase
                     const url = value.url
