@@ -13,22 +13,39 @@ import settings from './settings.json'
 Airtable.configure({
     endpointUrl: 'https://api.airtable.com',
     apiKey: settings.airtable.apiKey
-});
-
-const base = Airtable.base(settings.airtable.base.id)
+})
+const airtableBase = Airtable.base(settings.airtable.base.id)
 
 // init firebase admin
 firebaseAdmin.initializeApp({
     credential: firebaseAdmin.credential.cert(settings.firebase.serviceAccount),
     databaseURL: settings.firebase.databaseURL
-});
+})
 const bucket = firebaseAdmin.storage().bucket(settings.firebase.bucket);
+
+import { testdata } from './testdata'
 
 
 console.log('\n\n\n*** Airtable to Firebase Service *** \n\n\n')
 
-function main() {
+const airtable2firebase = (tableName) => {
 
+    // airtableBase(tableName).select({
+    //   maxRecords: 1,
+    //   view: 'Grid view'
+    // }).firstPage(function (err, records) {
+
+    //   if (err) {
+    //     console.error(err);
+    //     return
+    //   }
+
+
+    //   const table = records.map(record => record._rawJson);
+
+    //   console.log(table)
+
+    // })
 
     const uploadToFirebaseCloudStorage = (url, destination = '') => {
 
@@ -129,10 +146,13 @@ function main() {
         )
     }
 
+    swapUrls(testdata, airtableBaseId)
+
+
 
     // uploadToFirebaseCloudStorage('https://dl.airtable.com/CMsluIDTXCtwIXXD8wro_1.jpg')
     //     .then(path => console.log(path))
     //     .catch(err => console.error(err))
 }
 
-main()
+airtable2firebase('Education')
