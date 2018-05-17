@@ -9,8 +9,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "babel-node run.js --presets es2015,stage-2",
-    "watch": "babel-watch ./run.js --presets es2015,stage-2"
+    "start": "babel-node index.js --presets es2015,stage-2",
+    "watch": "babel-watch ./index.js --presets es2015,stage-2"
   },
   "keywords": [],
   "author": "",
