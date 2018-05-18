@@ -1,7 +1,7 @@
 {
   "name": "airtable2firebase",
-  "version": "1.0.0",
-  "description": "",
+  "version": "0.1.0",
+  "description": "Interface between airtable and firebase. Uses firebase database and storage for uploading files.",
   "repository": {
     "type": "git",
     "url": "https://github.com/enryco/airtable2firebase"
@@ -10,18 +10,16 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "babel-node index.js --presets es2015,stage-2",
-    "watch": "babel-watch ./index.js --presets es2015,stage-2",
-    "nodemon": "nodemon --exec npm run start -- ./index.js"
+    "watch": "nodemon --exec npm run start -- ./index.js"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "Enrico Scherlies (https://enricoscherlies.com/)",
+  "license": "MIT",
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-es2015-node": "^6.1.1",
     "babel-preset-stage-2": "^6.24.1",
-    "babel-watch": "^2.0.7",
     "nodemon": "^1.17.4"
   },
   "dependencies": {
