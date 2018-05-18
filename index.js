@@ -1,3 +1,3 @@
 import airtable2firebase from './src/run.js'
 
-airtable2firebase()
+airtable2firebase('Education')
