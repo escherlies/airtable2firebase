@@ -10,7 +10,7 @@ const uploadToFirebaseCloudStorage = (url, destination = '') => {
         }
 
         const filename = url.substring(url.lastIndexOf('/') + 1)
-        const path = destination + filename
+        const path = destination + '/' + filename
         const file = firebaseBucket.file(path)
 
         let logMessage = ''
@@ -33,7 +33,7 @@ const uploadToFirebaseCloudStorage = (url, destination = '') => {
                                 .on('finish', function () {
 
                                     // The file upload is complete.
-                                    console.log(logMessage + 'Finished uploading', filename, 'to /' + destination)
+                                    console.log(logMessage + 'Finished uploading', path)
                                     resolve(path)
                                 })
                         } else {

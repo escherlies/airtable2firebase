@@ -77,8 +77,7 @@ const airtable2firebase = () => {
 
         recursivlyLookForAttatchments(clone)
 
-        setTimeout(() => console.log(clone), 5000
-        )
+        setTimeout(() => console.log(JSON.stringify(clone, null, 2)), 5000)
     }
 
     swapUrls(testdata, tableName)

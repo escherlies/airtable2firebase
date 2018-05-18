@@ -10,7 +10,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "babel-node index.js --presets es2015,stage-2",
-    "watch": "babel-watch ./index.js --presets es2015,stage-2"
+    "watch": "babel-watch ./index.js --presets es2015,stage-2",
+    "nodemon": "nodemon --exec npm run start -- ./index.js"
   },
   "keywords": [],
   "author": "",
@@ -20,7 +21,8 @@
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-es2015-node": "^6.1.1",
     "babel-preset-stage-2": "^6.24.1",
-    "babel-watch": "^2.0.7"
+    "babel-watch": "^2.0.7",
+    "nodemon": "^1.17.4"
   },
   "dependencies": {
     "airtable": "^0.5.4",
