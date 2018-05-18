@@ -1,7 +1,7 @@
 import { firebaseBucket } from './bases'
 import request from 'request'
 
-const uploadToFirebaseCloudStorage = (url, destination = '') => {
+const uploadToFirebaseCloudStorage = (url, path) => {
 
     return new Promise((resolve, reject) => {
 
@@ -9,8 +9,6 @@ const uploadToFirebaseCloudStorage = (url, destination = '') => {
             reject(error)
         }
 
-        const filename = url.substring(url.lastIndexOf('/') + 1)
-        const path = destination + '/' + filename
         const file = firebaseBucket.file(path)
 
         let logMessage = ''
@@ -18,7 +16,7 @@ const uploadToFirebaseCloudStorage = (url, destination = '') => {
         file.exists(function (err, exists) {
             if (err) return errorHandler(err)
 
-            if (!exists || true) { // TODO-PROD: Remove True
+            if (!exists) { // TODO-PROD: Remove True
                 const currentRequest = request
                     .get(url)
                     .on('response', function (response) {
@@ -34,7 +32,7 @@ const uploadToFirebaseCloudStorage = (url, destination = '') => {
 
                                     // The file upload is complete.
                                     console.log(logMessage + 'Finished uploading', path)
-                                    resolve(path)
+                                    resolve()
                                 })
                         } else {
                             errorHandler('Response error code ' + response.statusCode)
@@ -44,7 +42,7 @@ const uploadToFirebaseCloudStorage = (url, destination = '') => {
 
 
             } else {
-                console.log(logMessage + 'File', filename, 'already uploaded')
+                console.log(logMessage + 'Already uploaded', path)
                 resolve()
             }
         })

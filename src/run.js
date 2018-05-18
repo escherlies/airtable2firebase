@@ -4,6 +4,7 @@ import _ from 'lodash'
 //
 import { airtableBase } from './bases'
 import uploadToFirebaseCloudStorage from './uploader'
+import { isArtableAttachment } from './utils'
 
 import { testdata } from '../testdata'
 
@@ -30,57 +31,53 @@ const airtable2firebase = () => {
 
     // })
 
+    const uploadAndAttatchUrls = (array, destination) => {
 
+        return new Promise((resolve, reject) => {
 
-    const isArtableAttachment = (object, type) => {
+            const promisses = []
 
-        const checkProperties = properties => _.indexOf(_.map(properties, property => _.has(object, property)), false) === -1
+            const clone = _.cloneDeep(array)
 
-        switch (type) {
-            case "file":
-                return checkProperties(["id", "url", "filename", "size", "type"])
-            case "thumbnail":
-                return checkProperties(["url", "width", "height"])
-            default:
-                return false
-        }
-    }
+            const recursivlyLookForAttatchments = (value, route = []) => {
 
+                if (typeof value === 'object') {
 
-    const swapUrls = (array, destination) => {
+                    // check if it's an airtable file object
+                    if (isArtableAttachment(value)) {
 
-        const clone = _.cloneDeep(array)
+                        // upload to firebase
+                        const url = value.url
+                        const path = destination + '/' + url.substring(url.lastIndexOf('/') + 1)
 
-        const recursivlyLookForAttatchments = (value, route = []) => {
+                        _.set(clone, [...route, 'firebasePath'], path)
 
-            if (typeof value === 'object') {
+                        promisses.push(uploadToFirebaseCloudStorage(url, path))
 
-                // check if it's an airtable file object
-                if (isArtableAttachment(value, 'file') || isArtableAttachment(value, 'thumbnail')) {
+                    }
 
-                    // upload to firebase
-                    const url = value.url
-                    uploadToFirebaseCloudStorage(url, destination)
-                        .then(path => {
-                            _.set(clone, [...route, 'firebasePath'], path)
-                        })
-                        .catch(err => console.error(err))
+                    // iterate again over every key
+                    _.forEach(value, (nextValue, key, collection) => {
+                        recursivlyLookForAttatchments(nextValue, [...route, key])
+                    })
+
                 }
-
-                // iterate again over every key
-                _.forEach(value, (nextValue, key, collection) => {
-                    recursivlyLookForAttatchments(nextValue, [...route, key])
-                })
-
             }
-        }
 
-        recursivlyLookForAttatchments(clone)
-
-        setTimeout(() => console.log(JSON.stringify(clone, null, 2)), 5000)
+            recursivlyLookForAttatchments(clone)
+            Promise
+                .all(promisses)
+                .then(() => resolve(clone))
+                .catch(err => reject(err))
+        })
     }
 
-    swapUrls(testdata, tableName)
+    uploadAndAttatchUrls(testdata, tableName)
+        .then(data => {
+            console.log(JSON.stringify(data, null, 2))
+
+        })
+        .catch(err => console.log(err))
 }
 
 export default airtable2firebase
