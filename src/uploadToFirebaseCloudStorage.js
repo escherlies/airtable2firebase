@@ -28,10 +28,8 @@ const uploadToFirebaseCloudStorage = (url, path) => {
 
                             currentRequest.pipe(file.createWriteStream())
                                 .on('error', errorHandler)
-                                .on('finish', function () {
-
-                                    // The file upload is complete.
-                                    console.log(logMessage + 'Finished uploading', path)
+                                .on('finish', () => {
+                                    // console.log(logMessage + 'Finished uploading', path)
                                     resolve()
                                 })
                         } else {
@@ -42,7 +40,7 @@ const uploadToFirebaseCloudStorage = (url, path) => {
 
 
             } else {
-                console.log(logMessage + 'Already uploaded', path)
+                // console.log(logMessage + 'Already uploaded', path)
                 resolve()
             }
         })
