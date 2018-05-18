@@ -5,6 +5,7 @@ import _ from 'lodash'
 import { airtableBase } from './bases'
 
 import uploadAndAttatchUrls from './uploadAndAttatchUrls'
+import uploadToFirebaseDatabase from './uploadToFirebaseDatabase'
 
 import { testdata } from '../testdata'
 
@@ -21,7 +22,7 @@ const airtable2firebase = (...args) => {
         airtableBase(tableName)
             .select({
                 maxRecords: 1,
-                view: 'Grid view'
+                view: 'Main'
             })
             .firstPage((err, records) => {
 
@@ -32,10 +33,9 @@ const airtable2firebase = (...args) => {
                 uploadAndAttatchUrls(table, tableName)
                     .then(data => {
 
-                        console.log(JSON.stringify(data, null, 2))
-
-                        // next: upload data to firebase database
-
+                        // console.log(JSON.stringify(data, null, 2))
+                        uploadToFirebaseDatabase(data, tableName)
+                            .then(() => console.log('Done uploading to database'))
                     })
                     .catch(err => console.log(err))
             })

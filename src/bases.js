@@ -19,7 +19,8 @@ firebaseAdmin.initializeApp({
 })
 
 const firebaseBucket = firebaseAdmin.storage().bucket(settings.firebase.bucket);
+const firebaseDatabase = firebaseAdmin.database()
 
 
 
-export { airtableBase, firebaseBucket }
+export { airtableBase, firebaseBucket, firebaseDatabase }
