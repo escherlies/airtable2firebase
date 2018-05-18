@@ -1,0 +1,29 @@
+{
+    "airtable": {
+        "apiKey": "----airtable api key----",
+        "base": {
+            "id": "----base id----",
+            "name": "----name of the base----"
+        },
+        "tables" : [
+            "----tables of the base----",
+            "----tables of the base----"
+        ]
+    },
+    "firebase": {
+        "bucket": "gs://firebase-project-id.appspot.com",
+        "databaseURL": "https://firebase-project-id.firebaseio.com",
+        "serviceAccount": {
+            "type": "",
+            "project_id": "",
+            "private_key_id": "",
+            "private_key": "",
+            "client_email": "",
+            "client_id": "",
+            "auth_uri": "",
+            "token_uri": "",
+            "auth_provider_x509_cert_url": "",
+            "client_x509_cert_url": ""
+        }
+    }
+}
