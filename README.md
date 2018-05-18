@@ -2,6 +2,9 @@
 
 Get Airtable data and files and put them on firebase databse and storage.
 
+- Airtable: https://airtable.com/
+- Firebase: https://firebase.google.com/
+
 ## Motivation
 
 - Using airtable as a nicely maintainble spreadsheet. Airtable also has a nice API which can give you the data in rawJSON format. However, airtable is no production API!
