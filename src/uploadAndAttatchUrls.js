@@ -24,7 +24,7 @@ const uploadAndAttatchUrls = (array, destination) => {
 
                     _.set(clone, [...route, 'firebasePath'], path)
 
-                    promisses.push(uploadToFirebaseCloudStorage(url, path))
+                    promisses.push(uploadToFirebaseCloudStorage(url, path, route))
 
                 }
 
@@ -39,7 +39,12 @@ const uploadAndAttatchUrls = (array, destination) => {
         recursivlyLookForAttatchments(clone)
         Promise
             .all(promisses)
-            .then(() => resolve(clone))
+            .then(values => {
+                _.forEach(values, value => {
+                    _.set(clone, [...value.route, 'mediaLink'], value.mediaLink)
+                })
+                resolve(clone)
+            })
             .catch(err => reject(err))
     })
 }

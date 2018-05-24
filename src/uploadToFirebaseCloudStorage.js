@@ -1,7 +1,7 @@
 import { firebaseBucket } from './bases'
 import request from 'request'
 
-const uploadToFirebaseCloudStorage = (url, path) => {
+const uploadToFirebaseCloudStorage = (url, path, route) => {
 
     return new Promise((resolve, reject) => {
 
@@ -16,7 +16,7 @@ const uploadToFirebaseCloudStorage = (url, path) => {
         file.exists(function (err, exists) {
             if (err) return errorHandler(err)
 
-            if (!exists) { // TODO-PROD: Remove True
+            if (!exists) {
                 const currentRequest = request
                     .get(url)
                     .on('response', function (response) {
@@ -26,11 +26,20 @@ const uploadToFirebaseCloudStorage = (url, path) => {
 
                         if (response.statusCode === 200) {
 
-                            currentRequest.pipe(file.createWriteStream())
+                            currentRequest.pipe(file.createWriteStream({ predefinedAcl: 'publicRead' }))
                                 .on('error', errorHandler)
                                 .on('finish', () => {
-                                    // console.log(logMessage + 'Finished uploading', path)
-                                    resolve()
+
+                                    // get download link
+                                    file.getMetadata()
+                                        .then(data => {
+                                            const metadata = data[0];
+                                            const apiResponse = data[1];
+                                            const mediaLink = metadata.mediaLink
+                                            resolve({ mediaLink, route })
+
+                                        }).catch(errorHandler)
+
                                 })
                         } else {
                             errorHandler('Response error code ' + response.statusCode)
@@ -40,8 +49,15 @@ const uploadToFirebaseCloudStorage = (url, path) => {
 
 
             } else {
-                // console.log(logMessage + 'Already uploaded', path)
-                resolve()
+                // get download link
+                file.getMetadata()
+                    .then(data => {
+                        const metadata = data[0];
+                        const apiResponse = data[1];
+                        const mediaLink = metadata.mediaLink
+                        resolve({ mediaLink, route })
+
+                    }).catch(errorHandler)
             }
         })
     })
