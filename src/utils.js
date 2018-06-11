@@ -30,6 +30,7 @@ export const getDateTime = () => {
     let day = date.getDate()
     day = (day < 10 ? "0" : "") + day
 
-    const dateTime =  year + "-" + month + "-" + day + "T" + hour + ":" + min + ":" + sec
-    return dateTime
+    // const dateTime =  year + "-" + month + "-" + day + "T" + hour + ":" + min + ":" + sec
+    const dateTimeYMD = year + "-" + month + "-" + day
+    return dateTimeYMD
 }
